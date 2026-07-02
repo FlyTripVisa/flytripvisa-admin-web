@@ -55,12 +55,12 @@ export default async function Layout({ children }: Readonly<{ children: ReactNod
               <div className="flex items-center gap-2 pl-1">
                 {/* 🛠️ লোগো ইউআরএল আপডেট করা হয়েছে */}
                 <img 
-                  src="https://lh3.googleusercontent.com/d/1Zz_B4mZkyjipUH6yxeNtxiAJuBsXCbIj" 
+                  src="https://lh3.googleusercontent.com/d/1rIJ9cQ2xTn_o2Wyj_SGhd7MseNP-Ha2L" 
                   alt="FlyTripVisa Logo" 
                   className="h-6 w-auto object-contain"
                 />
                 <span className="text-sm font-black tracking-wider text-red-600 uppercase flex items-center gap-1">
-                  Fly Trip <span className="text-red-500 font-bold">Visa</span>
+                  Fly AI <span className="text-red-500 font-bold">Robot</span>
                 </span>
               </div>
             </div>
