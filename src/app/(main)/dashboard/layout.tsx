@@ -35,7 +35,7 @@ export default async function Layout({ children }: Readonly<{ children: ReactNod
           "[html[data-content-layout=centered]_&>*]:max-w-screen-2xl",
           "peer-data-[variant=inset]:border-0",
           "[--dashboard-header-height:--spacing(12)]",
-          "min-w-0 overflow-x-clip flex flex-col min-h-screen",
+          "min-w-0 overflow-x-clip flex flex-col min-h-screen bg-background", // flex-col এবং min-h-screen নিশ্চিত করা হয়েছে
         )}
       >
         {/* হেডার সেকশন */}
@@ -53,9 +53,10 @@ export default async function Layout({ children }: Readonly<{ children: ReactNod
                 className="mx-1 data-[orientation=vertical]:h-4 data-[orientation=vertical]:self-center"
               />
               <div className="flex items-center gap-2 pl-1">
+                {/* 🛠️ লোগো ইউআরএল আপডেট করা হয়েছে */}
                 <img 
-                  src="/logo.png" 
-                  alt="FlyTrip Visa Logo" 
+                  src="https://lh3.googleusercontent.com/d/1Zz_B4mZkyjipUH6yxeNtxiAJuBsXCbIj" 
+                  alt="FlyTripVisa Logo" 
                   className="h-6 w-auto object-contain"
                 />
                 <span className="text-sm font-black tracking-wider text-red-600 uppercase flex items-center gap-1">
@@ -65,9 +66,10 @@ export default async function Layout({ children }: Readonly<{ children: ReactNod
             </div>
 
             <div className="flex items-center gap-3">
+              {/* 🛠️ ফ্যাভিকন ড্রাগন আইকন ইউআরএল আপডেট করা হয়েছে */}
               <div className="h-8 w-8 rounded-full overflow-hidden bg-black flex items-center justify-center border border-slate-200">
                 <img 
-                  src="/dragon-logo.png" 
+                  src="https://lh3.googleusercontent.com/d/1rIJ9cQ2xTn_o2Wyj_SGhd7MseNP-Ha2L" 
                   alt="Dragon Icon" 
                   className="h-full w-full object-cover"
                 />
@@ -79,13 +81,15 @@ export default async function Layout({ children }: Readonly<{ children: ReactNod
           </div>
         </header>
 
-        {/* মেইন ড্যাশবোর্ড কন্টেন্ট এরিয়া */}
-        <div className="min-h-0 min-w-0 flex-1 overflow-x-hidden p-4 has-data-[content-padding=false]:p-0 md:p-6 md:has-data-[content-padding=false]:p-0">
-          {children}
-        </div>
+        {/* 🛠️ ফিক্সড মেইন কন্টেন্ট এরিয়া (ফুটারকে নিচে পুশ করবে এবং বাড়তি গ্যাপ রিমুভ করবে) */}
+        <main className="flex-1 flex flex-col min-h-0 w-full">
+          <div className="flex-1 p-4 has-data-[content-padding=false]:p-0 md:p-6 md:has-data-[content-padding=false]:p-0">
+            {children}
+          </div>
+        </main>
 
-        {/* --- মডিফাইড ফুটার সেকশন (বাটন রিমুভড + সোশ্যাল মিডিয়া যুক্ত) --- */}
-        <footer className="w-full bg-transparent text-muted-foreground py-12 px-6 mt-auto border-t border-border">
+        {/* ফুটার সেকশন (shrink-0 দিয়ে স্ট্যাটিক পজিশন লক করা হয়েছে) */}
+        <footer className="w-full bg-transparent text-muted-foreground py-12 px-6 border-t border-border shrink-0">
           <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8">
             
             {/* কলাম ১: ডেসক্রিপশন */}
@@ -139,7 +143,6 @@ export default async function Layout({ children }: Readonly<{ children: ReactNod
                 </div>
               </div>
             </div>
-
           </div>
 
           {/* ফুটার বটম লিংক */}
