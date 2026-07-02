@@ -1,13 +1,8 @@
 import type { ReactNode } from "react";
-
 import { cookies } from "next/headers";
-import Link from "next/link";
-
-import { siGithub } from "simple-icons";
+import Image from "next/image"; // লোগো ইমেজের জন্য Next.js Image ব্যবহার করা বেস্ট
 
 import { AppSidebar } from "@/app/(main)/dashboard/_components/sidebar/app-sidebar";
-import { SimpleIcon } from "@/components/simple-icon";
-import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { SidebarInset, SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { users } from "@/data/users";
@@ -15,9 +10,6 @@ import { cn } from "@/lib/utils";
 import { getPreference } from "@/server/server-actions";
 
 import { AccountSwitcher } from "./_components/sidebar/account-switcher";
-import { LayoutControls } from "./_components/sidebar/layout-controls";
-import { SearchDialog } from "./_components/sidebar/search-dialog";
-import { ThemeSwitcher } from "./_components/sidebar/theme-switcher";
 
 export default async function Layout({ children }: Readonly<{ children: ReactNode }>) {
   const cookieStore = await cookies();
@@ -42,11 +34,12 @@ export default async function Layout({ children }: Readonly<{ children: ReactNod
           "[html[data-content-layout=centered]_&>*]:mx-auto",
           "[html[data-content-layout=centered]_&>*]:w-full",
           "[html[data-content-layout=centered]_&>*]:max-w-screen-2xl",
-          "peer-data-[variant=inset]:border",
+          "peer-data-[variant=inset]:border-0", // আপনার ছবির মতো বর্ডারলেস লুকের জন্য ০ করা হয়েছে
           "[--dashboard-header-height:--spacing(12)]",
-          "min-w-0 overflow-x-clip flex flex-col min-h-screen", // ফুটারকে নিচে পুশ করার জন্য flex এবং min-h-screen অ্যাড করা হয়েছে
+          "min-w-0 overflow-x-clip flex flex-col min-h-screen",
         )}
       >
+        {/* --- মডিফাইড হেডার সেকশন (আপনার ছবি অনুযায়ী) --- */}
         <header
           className={cn(
             "flex h-12 shrink-0 items-center gap-2 border-b transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12",
@@ -54,30 +47,44 @@ export default async function Layout({ children }: Readonly<{ children: ReactNod
           )}
         >
           <div className="flex w-full items-center justify-between px-4 lg:px-6">
-            <div className="flex items-center gap-1 lg:gap-2">
+            
+            {/* বাম অংশ: সাইডবার ট্রিগার এবং ফ্লাইট্রিপ ভিসা লোগো ব্র্যান্ডিং */}
+            <div className="flex items-center gap-2">
               <SidebarTrigger className="-ml-1" />
               <Separator
                 orientation="vertical"
-                className="mx-2 data-[orientation=vertical]:h-4 data-[orientation=vertical]:self-center"
+                className="mx-1 data-[orientation=vertical]:h-4 data-[orientation=vertical]:self-center"
               />
-              <SearchDialog />
+              {/* মেইন ব্র্যান্ড লোগো এরিয়া */}
+              <div className="flex items-center gap-2 pl-1">
+                <img 
+                  src="/logo.png" // আপনার public/ ফোল্ডারে থাকা লোগোর পাথ এখানে দিন
+                  alt="FlyTrip Visa Logo" 
+                  className="h-6 w-auto object-contain"
+                />
+                <span className="text-sm font-black tracking-wider text-red-600 uppercase flex items-center gap-1">
+                  Fly Trip <span className="text-red-500 font-bold">Visa</span>
+                </span>
+              </div>
             </div>
-            <div className="flex items-center gap-2">
-              <LayoutControls />
-              <ThemeSwitcher />
-              <Button asChild size="icon">
-                <Link
-                  prefetch={false}
-                  href="https://github.com/arhamkhnz/next-shadcn-admin-dashboard"
-                  target="_blank"
-                  rel="noreferrer"
-                  aria-label="Open GitHub repository"
-                >
-                  <SimpleIcon icon={siGithub} className="fill-primary-foreground" />
-                </Link>
-              </Button>
-              <AccountSwitcher users={users} />
+
+            {/* ডান অংশ: ড্রাগন লোগো এবং প্রোফাইল অ্যাভাটার (আপনার ছবি অনুযায়ী) */}
+            <div className="flex items-center gap-3">
+              {/* ড্রাগন সার্কেল লোগো */}
+              <div className="h-8 w-8 rounded-full overflow-hidden bg-black flex items-center justify-center border border-slate-200">
+                <img 
+                  src="/dragon-logo.png" // আপনার ড্রাগন লোগোর ইমেজ পাথ এখানে দিন
+                  alt="Dragon Icon" 
+                  className="h-full w-full object-cover"
+                />
+              </div>
+
+              {/* ইউজার প্রোফাইল বা অ্যাকাউন্ট স্যুইচার */}
+              <div className="h-8 w-8 rounded-full overflow-hidden bg-slate-100 flex items-center justify-center">
+                <AccountSwitcher users={users} />
+              </div>
             </div>
+
           </div>
         </header>
 
@@ -86,11 +93,9 @@ export default async function Layout({ children }: Readonly<{ children: ReactNod
           {children}
         </div>
 
-        {/* --- নিচে আপনার দেওয়া ফুটার সেকশন (Tailwind দিয়ে ডিজাইন রেডি) --- */}
-        <footer className="w-full bg-slate-900 text-slate-300 py-12 px-6 mt-auto border-t border-slate-800">
+        {/* ফুটার সেকশন */}
+        <footer className="w-full bg-slate-900 text-slate-300 py-12 px-6 mt-auto border-t border-slate-800精密">
           <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8">
-            
-            {/* কলাম ১: ডেসক্রিপশন এবং পেমেন্ট গেটওয়ে */}
             <div className="space-y-4">
               <h4 className="text-xl font-bold text-white">FlyTripVisa | 飞行旅行签证</h4>
               <p className="text-sm text-slate-400 leading-relaxed">
@@ -100,17 +105,7 @@ export default async function Layout({ children }: Readonly<{ children: ReactNod
               <p className="text-xs text-slate-500 italic leading-normal">
                 Note: FlyTripVisa | 飞行旅行签证 is an independent AI-powered service provider. We are not affiliated with any government immigration department. Visa approval is subject to the discretion of the issuing authority.
               </p>
-              
-              {/* পেমেন্ট মেথড টেক্সট বা আইকন হোল্ডার */}
-              <div className="flex gap-2 pt-2 text-xs font-semibold uppercase tracking-wider text-slate-400">
-                <span className="px-2 py-1 bg-slate-800 rounded">Visa</span>
-                <span className="px-2 py-1 bg-slate-800 rounded">Mastercard</span>
-                <span className="px-2 py-1 bg-slate-800 rounded">Alipay</span>
-                <span className="px-2 py-1 bg-slate-800 rounded">WeChat</span>
-              </div>
             </div>
-
-            {/* কলাম ২: গ্লোবাল অফিস */}
             <div className="space-y-4 md:pl-8">
               <h4 className="text-xl font-bold text-white">Global Presence</h4>
               <ul className="space-y-2 text-sm text-slate-400">
@@ -119,8 +114,6 @@ export default async function Layout({ children }: Readonly<{ children: ReactNod
                 <li><strong className="text-slate-200">Bangladesh:</strong> Dhaka Office</li>
               </ul>
             </div>
-
-            {/* কলাম ৩: কন্ট্যাক্ট এবং সিকিউর পেমেন্ট */}
             <div className="space-y-4">
               <h4 className="text-xl font-bold text-white">Contact</h4>
               <button className="w-full bg-blue-600 text-white font-medium py-2.5 px-4 rounded-md hover:bg-blue-700 transition-all shadow-md tracking-wide">
@@ -131,10 +124,7 @@ export default async function Layout({ children }: Readonly<{ children: ReactNod
                 <p><strong>Email:</strong> visa@flytripvisa.site</p>
               </div>
             </div>
-
           </div>
-
-          {/* ফুটার বটম লিংকসমূহ */}
           <div className="max-w-7xl mx-auto mt-8 pt-6 border-t border-slate-800 flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-slate-500">
             <div className="flex gap-4">
               <span className="hover:text-slate-300 cursor-pointer">Refund Policy</span>
