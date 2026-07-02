@@ -116,9 +116,6 @@ export default async function Layout({ children }: Readonly<{ children: ReactNod
             </div>
             <div className="space-y-4">
               <h4 className="text-xl font-bold text-white">Contact</h4>
-              <button className="w-full bg-blue-600 text-white font-medium py-2.5 px-4 rounded-md hover:bg-blue-700 transition-all shadow-md tracking-wide">
-                🔒 SECURE PAYMENT
-              </button>
               <div className="text-sm text-slate-400 space-y-1">
                 <p><strong>WhatsApp:</strong> +8801338354383</p>
                 <p><strong>Email:</strong> visa@flytripvisa.site</p>
@@ -132,7 +129,7 @@ export default async function Layout({ children }: Readonly<{ children: ReactNod
               <span className="hover:text-slate-300 cursor-pointer">Terms</span>
               <span className="hover:text-slate-300 cursor-pointer">Contact</span>
             </div>
-            <p>© 2026 FLYTRIPVISA | 飞行旅行签证 . Official Document Specialists.</p>
+            <p>© 2026 FLYTRIPVISA | 飞行旅行签证 . Official Document Specialists And Fly AI Robot- Mini Web App .</p>
           </div>
         </footer>
 
