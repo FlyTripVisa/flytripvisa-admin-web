@@ -1,8 +1,8 @@
-"use strict";
-"use client";
+Import type { ReactNode } from "react";
 
-import { useState, useEffect, type ReactNode } from "react";
+import { cookies } from "next/headers";
 import Link from "next/link";
+
 import { siGithub } from "simple-icons";
 
 import { AppSidebar } from "@/app/(main)/dashboard/_components/sidebar/app-sidebar";
@@ -12,44 +12,20 @@ import { Separator } from "@/components/ui/separator";
 import { SidebarInset, SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { users } from "@/data/users";
 import { cn } from "@/lib/utils";
+import { getPreference } from "@/server/server-actions";
 
 import { AccountSwitcher } from "./_components/sidebar/account-switcher";
 import { LayoutControls } from "./_components/sidebar/layout-controls";
 import { SearchDialog } from "./_components/sidebar/search-dialog";
 import { ThemeSwitcher } from "./_components/sidebar/theme-switcher";
 
-// যেহেতু এটি Client Component-এ রুপান্তর করা হয়েছে, সার্ভার একশন বা কুকিজ ক্লায়েন্ট সাইড ইফেক্ট ও ডাইনামিকালি হ্যান্ডেল হবে।
-export default function Layout({ children }: Readonly<{ children: ReactNode }>) {
-  const [defaultOpen, setDefaultOpen] = useState(true);
-  const [variant, setVariant] = useState<any>("sidebar");
-  const [collapsible, setCollapsible] = useState<any>("icon");
-  
-  // হেডার হাইড/শো করার জন্য স্টেট লজিক
-  const [showHeader, setShowHeader] = useState(true);
-  const [lastScrollY, setLastScrollY] = useState(0);
-
-  useEffect(() => {
-    // কুকি এবং প্রেফারেন্স রিড করার মক সল্যুশন ক্লায়েন্ট সাইডের জন্য
-    if (typeof window !== "undefined") {
-      const isClosed = document.cookie.includes("sidebar_state=false");
-      setDefaultOpen(!isClosed);
-    }
-
-    const controlHeader = () => {
-      if (typeof window !== "undefined") {
-        // ১০০ পিক্সেলের বেশি স্ক্রল করলে এবং নিচে স্ক্রল করলে হাইড হবে
-        if (window.scrollY > lastScrollY && window.scrollY > 100) {
-          setShowHeader(false); 
-        } else {
-          setShowHeader(true); // উপরে স্ক্রল করলেই সাথে সাথে ফিরে আসবে
-        }
-        setLastScrollY(window.scrollY);
-      }
-    };
-
-    window.addEventListener("scroll", controlHeader);
-    return () => window.removeEventListener("scroll", controlHeader);
-  }, [lastScrollY]);
+export default async function Layout({ children }: Readonly<{ children: ReactNode }>) {
+  const cookieStore = await cookies();
+  const defaultOpen = cookieStore.get("sidebar_state")?.value !== "false";
+  const [variant, collapsible] = await Promise.all([
+    getPreference("sidebar_variant"),
+    getPreference("sidebar_collapsible"),
+  ]);
 
   return (
     <SidebarProvider
@@ -66,11 +42,50 @@ export default function Layout({ children }: Readonly<{ children: ReactNode }>) 
           "[html[data-content-layout=centered]_&>*]:mx-auto",
           "[html[data-content-layout=centered]_&>*]:w-full",
           "[html[data-content-layout=centered]_&>*]:max-w-screen-2xl",
-          // রিকোয়ারমেন্ট অনুযায়ী চারপাশের সমস্ত অপ্রয়োজনীয় বর্ডার এখান থেকে রিমুভ করা হয়েছে
+          "peer-data-[variant=inset]:border",
           "[--dashboard-header-height:--spacing(12)]",
           "min-w-0 overflow-x-clip",
         )}
       >
         <header
           className={cn(
-            "flex h-12 shrink-0 items-center gap-2 transition-transform duration-300 ease-in
+            "flex h-12 shrink-0 items-center gap-2 border-b transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12",
+            // Handle sticky navbar style with conditional classes so blur, background, z-index, and rounded corners remain consistent across all SidebarVariant layouts.
+            "[html[data-navbar-style=sticky]_&]:sticky [html[data-navbar-style=sticky]_&]:top-0 [html[data-navbar-style=sticky]_&]:z-50 [html[data-navbar-style=sticky]_&]:overflow-hidden [html[data-navbar-style=sticky]_&]:rounded-t-[inherit] [html[data-navbar-style=sticky]_&]:bg-background/50 [html[data-navbar-style=sticky]_&]:backdrop-blur-md",
+          )}
+        >
+          <div className="flex w-full items-center justify-between px-4 lg:px-6">
+            <div className="flex items-center gap-1 lg:gap-2">
+              <SidebarTrigger className="-ml-1" />
+              <Separator
+                orientation="vertical"
+                className="mx-2 data-[orientation=vertical]:h-4 data-[orientation=vertical]:self-center"
+              />
+              <SearchDialog />
+            </div>
+            <div className="flex items-center gap-2">
+              <LayoutControls />
+              <ThemeSwitcher />
+              <Button asChild size="icon">
+                <Link
+                  prefetch={false}
+                  href="https://github.com/arhamkhnz/next-shadcn-admin-dashboard"
+                  target="_blank"
+                  rel="noreferrer"
+                  aria-label="Open GitHub repository"
+                >
+                  <SimpleIcon icon={siGithub} className="fill-primary-foreground" />
+                </Link>
+              </Button>
+              <AccountSwitcher users={users} />
+            </div>
+          </div>
+        </header>
+        {/* Pages can set data-content-padding="false" to render full-bleed app layouts. */}
+        <div className="min-h-0 min-w-0 flex-1 overflow-x-hidden p-4 has-data-[content-padding=false]:p-0 md:p-6 md:has-data-[content-padding=false]:p-0">
+          {children}
+        </div>
+      </SidebarInset>
+    </SidebarProvider>
+  );
+}
