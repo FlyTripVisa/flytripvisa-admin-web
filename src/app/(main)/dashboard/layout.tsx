@@ -60,7 +60,7 @@ export default async function Layout({ children }: Readonly<{ children: ReactNod
                   className="h-6 w-auto object-contain"
                 />
                 <span className="text-sm font-black tracking-wider text-red-600 uppercase flex items-center gap-1">
-                  FlyTripVisa<span className="text-red-500 font-bold">Fly AI🤖</span>
+                  FlyTripVisa<span className="text-red-500 font-bold">Fly AI</span>
                 </span>
               </div>
             </div>
