@@ -8,8 +8,8 @@
   
   "vars": {
     "NODE_ENV": "production",
-    "NEXT_PUBLIC_APP_URL": "https://flytripvisa.site",
-    "AI_MODEL": "@cf/meta/llama-3-8b-instruct",
+    "NEXT_PUBLIC_APP_URL": "https://flytripvisa-admin-web.vercel.app/",
+    "AI_MODEL": "@cf/qwen/qwen3-embedding-0.6b",
     "CF_ACCOUNT_ID": "b73b80fa62deef032d3c08248cf2f30b"
   },
   
@@ -29,7 +29,14 @@
       "id": "cc79304937ff4daa9d6debae85da8be9"
     }
   ],
-  
+  {
+  "hyperdrive": [
+    {
+      "binding": "HYPERDRIVE",
+      "id": "83340a6d07c546aca205f2b46c4fc5ed"
+    }
+  ]
+}
   "r2_buckets": [
     {
       "binding": "PROJECT_FILES",
