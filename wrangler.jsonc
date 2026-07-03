@@ -1,0 +1,89 @@
+{
+	"$schema": "./node_modules/wrangler/config-schema.json",
+	"name": "flytripvisa-admin-web",
+	"main": "./workers/app.ts",
+	"compatibility_date": "2025-10-08",
+	"compatibility_flags": ["nodejs_compat"],
+	"observability": {
+		"enabled": true
+	},
+	"upload_source_maps": true,
+	"vars": {
+		"VALUE_FROM_CLOUDFLARE": "Hello from Cloudflare (FlyTripVisa-Chat-AI)"
+	}
+}
+"ai": { "binding": "AI" }
+{
+  "analytics_engine_datasets": [
+    { "binding": "FlyTripVisa_DB", "dataset": "FlyTripVisa_DB" }
+  ]
+}
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "flytripvisaweb-assistant",
+  "main": "src/index.js",
+  "compatibility_date": "2026-06-24",
+  "compatibility_flags": ["nodejs_compat"],
+  "vars": {
+    "CF_ACCOUNT_ID": "b73b80fa62deef032d3c08248cf2f30b"
+  },
+  "ai": {
+    "binding": "AI"
+  },
+  "services": [
+    {
+      "binding": "AI_GATEWAY",
+      "service": "flytripvisa-gateway"
+    }
+  ]
+}
+{
+  "$schema": "https://developers.cloudflare.com/workers/wrangler/configuration/",
+  "name": "flytripvisa-admin-web",
+  "main": ".open-next/worker.js",
+  "compatibility_date": "2025-06-24",
+  "compatibility_flags": ["nodejs_compat"],
+  "observability": { "enabled": true },
+  
+  "vars": {
+    "NODE_ENV": "production",
+    "NEXT_PUBLIC_APP_URL": "https://flytripvisa.site",
+    "NEXT_PUBLIC_API_URL": "https://flytripvisa.site/api",
+    "AI_MODEL": "@cf/meta/llama-3-8b-instruct",
+    "AI_MAX_TOKENS": "2048",
+    "AI_TEMPERATURE": "0.5",
+    "JWT_SECRET": "prod_jwt_secret_here",
+    "SESSION_SECRET": "prod_session_secret_here",
+    "RATE_LIMIT_WINDOW": "60000",
+    "RATE_LIMIT_MAX_REQUESTS": "50"
+  },
+  
+  "ai": { "binding": "AI" },
+  
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "flytripvisa_db",
+      "database_id": "26c063fe-1868-44b1-9a8c-a68eecfa18e7"
+    }
+  ],
+  
+  "kv_namespaces": [
+    {
+      "binding": "KV_BINDING",
+      "id": "cc79304937ff4daa9d6debae85da8be9"
+    }
+  ],
+  
+  "r2_buckets": [
+    {
+      "binding": "PROJECT_FILES",
+      "bucket_name": "flytripvisaweb-project-files"
+    }
+  ],
+  
+  "assets": {
+    "directory": ".open-next/assets",
+    "not_found": "index.html"
+  }
+}
